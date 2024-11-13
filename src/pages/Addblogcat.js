@@ -1,98 +1,114 @@
-import { React, useEffect } from "react";
-import CustomInput from "../components/CustomInput";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import * as yup from "yup";
-import { useFormik } from "formik";
-import {
-  createNewblogCat,
-  getABlogCat,
-  resetState,
-  updateABlogCat,
-} from "../features/bcategory/bcategorySlice";
-let schema = yup.object().shape({
-  title: yup.string().required("Category Name is Required"),
-});
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
+import { db } from "./firebaase.js";
+
 const Addblogcat = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const getBlogCatId = location.pathname.split("/")[3];
-  const newBlogCategory = useSelector((state) => state.bCategory);
-  const {
-    isSuccess,
-    isError,
-    isLoading,
-    createBlogCategory,
-    blogCatName,
-    updatedBlogCategory,
-  } = newBlogCategory;
+  const [selectedImage, setSelectedImage] = useState(null); // Track selected image
+  const [galleryImages, setGalleryImages] = useState([]);   // Store gallery images
+
+  // Fetch all gallery images on component mount
   useEffect(() => {
-    if (getBlogCatId !== undefined) {
-      dispatch(getABlogCat(getBlogCatId));
-    } else {
-      dispatch(resetState());
-    }
-  }, [getBlogCatId]);
-  useEffect(() => {
-    if (isSuccess && createBlogCategory) {
-      toast.success("Blog Category Added Successfullly!");
-    }
-    if (isSuccess && updatedBlogCategory) {
-      toast.success("Blog Category Updated Successfullly!");
-      navigate("/admin/blog-category-list");
-    }
-    if (isError) {
-      toast.error("Something Went Wrong!");
-    }
-  }, [isSuccess, isError, isLoading]);
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      title: blogCatName || "",
-    },
-    validationSchema: schema,
-    onSubmit: (values) => {
-      const data = { id: getBlogCatId, blogCatData: values };
-      if (getBlogCatId !== undefined) {
-        dispatch(updateABlogCat(data));
-        dispatch(resetState());
-      } else {
-        dispatch(createNewblogCat(values));
-        formik.resetForm();
-        setTimeout(() => {
-          dispatch(resetState());
-        }, 300);
+    const fetchGalleryImages = async () => {
+      try {
+        const imagesSnapshot = await db.collection('gallery').get();
+        const images = imagesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          url: doc.data().url,
+        }));
+        setGalleryImages(images);
+      } catch (error) {
+        console.error("Error fetching gallery images: ", error);
       }
-    },
-  });
+    };
+
+    fetchGalleryImages();
+  }, []);
+
+  // Handle image selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file)); // Generate image URL for preview
+    }
+  };
+
+  // Handle form submission to upload the image
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedImage) {
+      toast.error("Please select an image to upload.");
+      return;
+    }
+
+    const file = e.target.querySelector('input[type="file"]').files[0];
+    const storageRef = firebase.storage().ref();
+    const galleryImageRef = storageRef.child(`gallery/${file.name}_${Date.now()}`);
+
+    try {
+      // Upload the image
+      await galleryImageRef.put(file);
+
+      // Get the download URL
+      const downloadURL = await galleryImageRef.getDownloadURL();
+
+      // Add the new image document to Firestore
+      const newImageDoc = await db.collection('gallery').add({ url: downloadURL });
+
+      // Update the state to display the new image in the gallery
+      setGalleryImages((prevImages) => [...prevImages, { id: newImageDoc.id, url: downloadURL }]);
+      setSelectedImage(null); // Clear selected image preview
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+      toast.error("Failed to upload image.");
+    }
+  };
+
   return (
     <div>
-      <h3 className="mb-4  title">
-        {getBlogCatId !== undefined ? "Edit" : "Add"} Blog Category
-      </h3>
+      <h3 className="mb-4 title">Add Gallery Photo</h3>
       <div>
-        <form action="" onSubmit={formik.handleSubmit}>
-          <CustomInput
-            type="text"
-            name="title"
-            onChng={formik.handleChange("title")}
-            onBlr={formik.handleBlur("title")}
-            val={formik.values.title}
-            label="Enter Blog Category"
-            id="blogcat"
+        <form onSubmit={handleSubmit}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
           />
-          <div className="error">
-            {formik.touched.title && formik.errors.title}
-          </div>
+
+          {/* Display selected image as a preview */}
+          {selectedImage && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <h4>Selected Image:</h4>
+              <img
+                src={selectedImage}
+                alt="Selected Preview"
+                style={{ width: 200, height: 200, objectFit: 'cover' }}
+              />
+            </div>
+          )}
+
           <button
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            {getBlogCatId !== undefined ? "Edit" : "Add"} Blog Category
+            Add
           </button>
         </form>
+
+        {/* Display gallery images */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '2%', gap: 10 }}>
+          {galleryImages.map((image) => (
+            <img
+              key={image.id}
+              src={image.url}
+              alt="Gallery"
+              style={{ width: 200, height: 200, objectFit: 'cover' }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

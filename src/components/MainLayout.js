@@ -28,10 +28,10 @@ const MainLayout = () => {
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo">
+        <div className="logo" style={{backgroundColor: '#ff6a00',}}>
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">DC</span>
-            <span className="lg-logo">Dev Corner</span>
+            <span className="sm-logo">BJ</span>
+            <span className="lg-logo">Bajarangi Indrusties</span>
           </h2>
         </div>
         <Menu
@@ -39,7 +39,7 @@ const MainLayout = () => {
           mode="inline"
           defaultSelectedKeys={[""]}
           onClick={({ key }) => {
-            if (key == "signout") {
+            if (key === "signout") {
             } else {
               navigate(key);
             }
@@ -73,12 +73,12 @@ const MainLayout = () => {
                 {
                   key: "brand",
                   icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand",
+                  label: "Best Product",
                 },
                 {
                   key: "list-brand",
                   icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand List ",
+                  label: "Best Product List ",
                 },
                 {
                   key: "category",
@@ -90,16 +90,16 @@ const MainLayout = () => {
                   icon: <BiCategoryAlt className="fs-4" />,
                   label: "Category List",
                 },
-                {
-                  key: "color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color",
-                },
-                {
-                  key: "list-color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color List",
-                },
+                // {
+                //   key: "color",
+                //   icon: <AiOutlineBgColors className="fs-4" />,
+                //   label: "Color",
+                // },
+                // {
+                //   key: "list-color",
+                //   icon: <AiOutlineBgColors className="fs-4" />,
+                //   label: "Color List",
+                // },
               ],
             },
             {
@@ -107,42 +107,42 @@ const MainLayout = () => {
               icon: <FaClipboardList className="fs-4" />,
               label: "Orders",
             },
-            {
-              key: "marketing",
-              icon: <RiCouponLine className="fs-4" />,
-              label: "Marketing",
-              children: [
-                {
-                  key: "coupon",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Coupon",
-                },
-                {
-                  key: "coupon-list",
-                  icon: <RiCouponLine className="fs-4" />,
-                  label: "Coupon List",
-                },
-              ],
-            },
+            // {
+            //   key: "marketing",
+            //   icon: <RiCouponLine className="fs-4" />,
+            //   label: "Marketing",
+            //   children: [
+            //     {
+            //       key: "coupon",
+            //       icon: <ImBlog className="fs-4" />,
+            //       label: "Add Coupon",
+            //     },
+            //     {
+            //       key: "coupon-list",
+            //       icon: <RiCouponLine className="fs-4" />,
+            //       label: "Coupon List",
+            //     },
+            //   ],
+            // },
             {
               key: "blogs",
               icon: <FaBloggerB className="fs-4" />,
-              label: "Blogs",
+              label: "Exhibit",
               children: [
                 {
                   key: "blog",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog",
+                  label: "Add Slider",
                 },
                 {
                   key: "blog-list",
                   icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog List",
+                  label: "Slider List",
                 },
                 {
                   key: "blog-category",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog Category",
+                  label: "Add Galery Image",
                 },
                 {
                   key: "blog-category-list",
@@ -197,11 +197,11 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Navdeep</h5>
-                <p className="mb-0">navdeepdahiya753@gmail.com</p>
+                <h5 className="mb-0">Bajarangi Indrusties</h5>
+                <p className="mb-0">bajarangiindustries@gmail.com</p>
               </div>
-              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li>
+              {/* <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                 <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
@@ -209,7 +209,7 @@ const MainLayout = () => {
                   >
                     View Profile
                   </Link>
-                </li>
+                </li> 
                 <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
@@ -219,7 +219,7 @@ const MainLayout = () => {
                     Signout
                   </Link>
                 </li>
-              </div>
+              </div> */}
             </div>
           </div>
         </Header>
