@@ -7,6 +7,7 @@ import { db } from "./firebaase.js";
 const Addblogcat = () => {
   const [selectedImage, setSelectedImage] = useState(null); // Track selected image
   const [galleryImages, setGalleryImages] = useState([]);   // Store gallery images
+  const [title, setTitle] = useState("");
 
   // Fetch all gallery images on component mount
   useEffect(() => {
@@ -55,15 +56,43 @@ const Addblogcat = () => {
       const downloadURL = await galleryImageRef.getDownloadURL();
 
       // Add the new image document to Firestore
-      const newImageDoc = await db.collection('gallery').add({ url: downloadURL });
+      const newImageDoc = await db.collection('gallery').add({
+        loc: title,
+        url: downloadURL
+      });
 
       // Update the state to display the new image in the gallery
       setGalleryImages((prevImages) => [...prevImages, { id: newImageDoc.id, url: downloadURL }]);
       setSelectedImage(null); // Clear selected image preview
+      setTitle("");
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Error uploading image: ", error);
       toast.error("Failed to upload image.");
+    }
+  };
+
+  // Handle delete image
+  const handleDelete = async (imageId, imageUrl) => {
+    try {
+      // Find the reference for the image in Firebase Storage
+      const storageRef = firebase.storage().refFromURL(imageUrl);
+
+      // Delete the image from Firebase Storage
+      await storageRef.delete();
+
+      // Delete the document from Firestore
+      await db.collection('gallery').doc(imageId).delete();
+
+      // Update local state to remove the deleted image
+      setGalleryImages((prevImages) =>
+        prevImages.filter((image) => image.id !== imageId)
+      );
+
+      toast.success("Image deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting image: ", error);
+      toast.error("Failed to delete image.");
     }
   };
 
@@ -76,6 +105,14 @@ const Addblogcat = () => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+          />
+
+          <label>Location</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Location"
           />
 
           {/* Display selected image as a preview */}
@@ -101,12 +138,34 @@ const Addblogcat = () => {
         {/* Display gallery images */}
         <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '2%', gap: 10 }}>
           {galleryImages.map((image) => (
-            <img
-              key={image.id}
-              src={image.url}
-              alt="Gallery"
-              style={{ width: 200, height: 200, objectFit: 'cover' }}
-            />
+            <div key={image.id} style={{ position: 'relative' }}>
+              <img
+                src={image.url}
+                alt="Gallery"
+                style={{ width: 200, height: 200, objectFit: 'cover' }}
+              />
+              {/* Delete Button */}
+              <button
+                onClick={() => handleDelete(image.id, image.url)}
+                style={{
+                  position: 'absolute',
+                  top: 5,
+                  right: 5,
+                  background: 'red',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  width: 25,
+                  height: 25,
+                  textAlign: 'center',
+                  lineHeight: '25px',
+                  fontSize: 14,
+                }}
+              >
+                X
+              </button>
+            </div>
           ))}
         </div>
       </div>

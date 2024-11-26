@@ -5,6 +5,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUser,
   AiOutlineBgColors,
+  AiOutlinePaperClip,
 } from "react-icons/ai";
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
@@ -28,7 +29,7 @@ const MainLayout = () => {
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" style={{backgroundColor: '#ff6a00',}}>
+        <div className="logo" style={{ backgroundColor: '#ff6a00', }}>
           <h2 className="text-white fs-5 text-center py-3 mb-0">
             <span className="sm-logo">BJ</span>
             <span className="lg-logo">Bajarangi Indrusties</span>
@@ -40,7 +41,10 @@ const MainLayout = () => {
           defaultSelectedKeys={[""]}
           onClick={({ key }) => {
             if (key === "signout") {
-            } else {
+            } else if (key === "quotation") {
+              
+            }
+            else {
               navigate(key);
             }
           }}
@@ -54,6 +58,13 @@ const MainLayout = () => {
               key: "customers",
               icon: <AiOutlineUser className="fs-4" />,
               label: "Customers",
+            },
+            {
+              key: "quotation",
+              icon: <a href="https://bajarangi-qutation.vercel.app/" target="_blank">
+                <AiOutlinePaperClip className="fs-4" />
+              </a>,
+              label: "Quotation"
             },
             {
               key: "Catalog",
