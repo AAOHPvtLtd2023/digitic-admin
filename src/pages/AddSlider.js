@@ -92,7 +92,7 @@ const handleFormSubmit = async (e) => {
     const sliderRef = db.collection('slider');
 
     // Create a folder for each product in Firebase Storage
-    const productPhotoRef = storageRef.child(`product-photos/${formik.values.title}`);
+    const productPhotoRef = storageRef.child(`slider/${productPhotos.name}`);
 
     // Upload photos to Firebase Storage
     const productPhotoTask = productPhotoRef.put(productPhotos);

@@ -1,25 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
+import firebase from "firebase/compat/app";
+
 const columns = [
   {
     title: "SNo",
     dataIndex: "key",
+    render: (text, record, index) => index + 1,
   },
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "Name",
   },
   {
-    title: "Product",
-    dataIndex: "product",
+    title: "Email",
+    dataIndex: "Email",
   },
   {
-    title: "Status",
-    dataIndex: "staus",
+    title: "Mobile",
+    dataIndex: "mobile",
   },
 ];
+
 const data1 = [];
 for (let i = 0; i < 46; i++) {
   data1.push({
@@ -30,6 +34,31 @@ for (let i = 0; i < 46; i++) {
   });
 }
 const Dashboard = () => {
+  const [data1, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const db = firebase.firestore();
+        const querySnapshot = await db.collection("Contacted User").get();
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          data.push({
+            key: doc.id,
+            Name: doc.data().Name,
+            Email: doc.data().Email,
+            mobile: doc.data().mobile,
+          });
+        });
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const data = [
     {
       type: "Jan",
@@ -157,7 +186,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="mt-4">
-        <h3 className="mb-5 title">Recent Orders</h3>
+        <h3 className="mb-5 title">Recent Contacts</h3>
         <div>
           <Table columns={columns} dataSource={data1} />
         </div>

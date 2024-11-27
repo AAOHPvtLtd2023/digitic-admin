@@ -4,13 +4,10 @@ import {
   AiOutlineDashboard,
   AiOutlineShoppingCart,
   AiOutlineUser,
-  AiOutlineBgColors,
   AiOutlinePaperClip,
 } from "react-icons/ai";
-import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
@@ -19,7 +16,10 @@ import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import logo from '../logo.jpg';
+
 const { Header, Sider, Content } = Layout;
+
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -41,8 +41,6 @@ const MainLayout = () => {
           defaultSelectedKeys={[""]}
           onClick={({ key }) => {
             if (key === "signout") {
-            } else if (key === "quotation") {
-              
             }
             else {
               navigate(key);
@@ -115,8 +113,10 @@ const MainLayout = () => {
             },
             {
               key: "orders",
-              icon: <FaClipboardList className="fs-4" />,
+              icon:
+                  <FaClipboardList className="fs-4" />,
               label: "Orders",
+              disabled: true,
             },
             // {
             //   key: "marketing",
@@ -189,7 +189,7 @@ const MainLayout = () => {
             <div className="position-relative">
               <IoIosNotifications className="fs-4" />
               <span className="badge bg-warning rounded-circle p-1 position-absolute">
-                3
+                0
               </span>
             </div>
 
@@ -198,8 +198,8 @@ const MainLayout = () => {
                 <img
                   width={32}
                   height={32}
-                  src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
-                  alt=""
+                  src={logo}
+                  alt="Logo"
                 />
               </div>
               <div
@@ -209,7 +209,7 @@ const MainLayout = () => {
                 aria-expanded="false"
               >
                 <h5 className="mb-0">Bajarangi Indrusties</h5>
-                <p className="mb-0">bajarangiindustries@gmail.com</p>
+                <p className="mb-0"><a href="mailto:bajarangiindustries@gmail.com">bajarangiindustries@gmail.com</a></p>
               </div>
               {/* <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                  <li>

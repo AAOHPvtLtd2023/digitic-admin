@@ -1,20 +1,17 @@
-import React, { useEffect , useState} from "react";
-import { Table } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../features/cutomers/customerSlice";
-import firebase from 'firebase/compat/app';
+import React, { useEffect, useState } from "react";
+import { Table, Button } from "antd";
+import firebase from "firebase/compat/app";
+import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const columns = [
   {
     title: "SNo",
     dataIndex: "key",
     render: (text, record, index) => index + 1,
-
   },
   {
     title: "Name",
     dataIndex: "Name",
-    // sorter: (a, b) => a.name.length - b.name.length,
   },
   {
     title: "Email",
@@ -24,14 +21,30 @@ const columns = [
     title: "Mobile",
     dataIndex: "mobile",
   },
+  {
+    title: "Actions",
+    dataIndex: "actions",
+    render: (_, record) => (
+      <Button
+        type="primary"
+        style={{
+          backgroundColor: "#25D366",
+          borderColor: "#25D366",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onClick={() => window.open(`https://wa.me/${record.mobile}`, "_blank")}
+        icon={<FaWhatsapp style={{ fontSize: "16px", color: "white" }} />}
+      />
+    ),
+  },
 ];
 
 const Customers = () => {
-  const dispatch = useDispatch();
-  const [data1, setdata] = useState([]);
+  const [data1, setData] = useState([]);
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const db = firebase.firestore();
@@ -45,30 +58,14 @@ const Customers = () => {
             mobile: doc.data().mobile,
           });
         });
-        setdata(data);
+        setData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-
-
-
     fetchData();
-    dispatch(getUsers());
   }, []);
-  // const customerstate = useSelector((state) => state.customer.customers);
-  // const data2 = [];
-  // for (let i = 0; i < customerstate.length; i++) {
-  //   if (customerstate[i].role !== "admin") {
-  //     data1.push({
-  //       key: i + 1,
-  //       name: customerstate[i].firstname + " " + customerstate[i].lastname,
-  //       email: customerstate[i].email,
-  //       mobile: customerstate[i].mobile,
-  //     });
-  //   }
-  // }
 
   return (
     <div>

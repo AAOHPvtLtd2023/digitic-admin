@@ -49,7 +49,7 @@ const Enquiries = () => {
     const fetchData = async () => {
       try {
         const db = firebase.firestore();
-        const querySnapshot = await db.collection("Enquary User").get();
+        const querySnapshot = await db.collection("enquiry").get();
         const data = [];
         querySnapshot.forEach((doc) => {
           data.push({

@@ -6,7 +6,6 @@ import Resetpassword from "./pages/Resetpassword";
 import Forgotpassword from "./pages/Forgotpassword";
 import MainLayout from "./components/MainLayout";
 import Enquiries from "./pages/Enquiries";
-import Bloglist from "./pages/Bloglist";
 import Blogcatlist from "./pages/Blogcatlist";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
@@ -24,6 +23,7 @@ import Couponlist from "./pages/Couponlist";
 import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
+import SliderList from "./pages/SliderList";
 function App() {
   return (
     <Router>
@@ -35,7 +35,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="enquiries/:id" element={<ViewEnq />} />
-          <Route path="blog-list" element={<Bloglist />} />
+          <Route path="blog-list" element={<SliderList/>} />
           <Route path="blog" element={<AddSlider/>} />
           <Route path="blog/:id" element={<AddSlider />} />
           <Route path="coupon-list" element={<Couponlist />} />
