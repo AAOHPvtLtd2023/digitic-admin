@@ -8,7 +8,7 @@ import {
 } from "react-icons/ai";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
 import { FaClipboardList, FaBloggerB } from "react-icons/fa";
@@ -211,7 +211,7 @@ const MainLayout = () => {
                 <h5 className="mb-0">Bajarangi Indrusties</h5>
                 <p className="mb-0"><a href="mailto:bajarangiindustries@gmail.com">bajarangiindustries@gmail.com</a></p>
               </div>
-              {/* <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                  <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
@@ -230,7 +230,7 @@ const MainLayout = () => {
                     Signout
                   </Link>
                 </li>
-              </div> */}
+              </div>
             </div>
           </div>
         </Header>

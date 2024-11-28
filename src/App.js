@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Resetpassword from "./pages/Resetpassword";
@@ -24,19 +24,41 @@ import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
 import SliderList from "./pages/SliderList";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 function App() {
+  // Initialize the state with localStorage value
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('loggedIn') === 'true');
+
+  // Check if user is logged in on mount (useEffect ensures that it's run only on initial load)
+  useEffect(() => {
+    const storedLoginStatus = localStorage.getItem('loggedIn') === 'true';
+    if (storedLoginStatus) {
+      setLoggedIn(true);
+    }
+  }, []);
+
+  // Function to handle login validation
+  const checkLogin = (username, password) => {
+    if (username === 'Bajarangi' && password === 'BI2014') {
+      setLoggedIn(true);
+      localStorage.setItem('loggedIn', 'true');  // Persist login state in localStorage
+    } else {
+      alert('Invalid credentials. Please try again.');
+    }
+  };
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setLoggedIn={checkLogin}/>} />
         <Route path="/reset-password" element={<Resetpassword />} />
         <Route path="/forgot-password" element={<Forgotpassword />} />
-        <Route path="/" element={<MainLayout />}>
+        <Route path="/" element={loggedIn ? (<MainLayout />) : (<Navigate to='/login' />)}>
           <Route index element={<Dashboard />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="enquiries/:id" element={<ViewEnq />} />
-          <Route path="blog-list" element={<SliderList/>} />
-          <Route path="blog" element={<AddSlider/>} />
+          <Route path="blog-list" element={<SliderList />} />
+          <Route path="blog" element={<AddSlider />} />
           <Route path="blog/:id" element={<AddSlider />} />
           <Route path="coupon-list" element={<Couponlist />} />
           <Route path="coupon" element={<AddCoupon />} />
@@ -51,7 +73,7 @@ function App() {
           <Route path="color" element={<Addcolor />} />
           <Route path="color/:id" element={<Addcolor />} />
           <Route path="list-category" element={<Categorylist />} />
-          <Route path="category" element={<Addcat/>} />
+          <Route path="category" element={<Addcat />} />
           <Route path="category/:id" element={<Addcat />} />
           <Route path="list-brand" element={<Brandlist />} />
           <Route path="brand" element={<Addbrand />} />

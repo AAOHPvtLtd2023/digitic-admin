@@ -141,7 +141,7 @@ const Dashboard = () => {
   return (
     <div>
       <h3 className="mb-4 title">Dashboard</h3>
-      <div className="d-flex justify-content-between align-items-center gap-3">
+      {/* <div className="d-flex justify-content-between align-items-center gap-3">
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
             <p className="desc">Total</p>
@@ -184,7 +184,7 @@ const Dashboard = () => {
         <div>
           <Column {...config} />
         </div>
-      </div>
+      </div> */}
       <div className="mt-4">
         <h3 className="mb-5 title">Recent Contacts</h3>
         <div>

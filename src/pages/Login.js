@@ -3,40 +3,23 @@ import CustomInput from "../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { message } from "antd";
 
-let schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Email should be valid")
-    .required("Email is Required"),
-  password: yup.string().required("Password is Required"),
-});
-const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const Login = ({setLoggedIn}) => {
+  const history = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema: schema,
-    onSubmit: (values) => {
-      dispatch(login(values));
-    },
   });
-  const authState = useSelector((state) => state);
 
-  const { user, isError, isSuccess, isLoading, message } = authState.auth;
+  const handleSignin = (e) => {
+    e.preventDefault();
+    setLoggedIn(formik.values.email, formik.values.password);
+    history('/');
+}
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("admin");
-    } else {
-      navigate("");
-    }
-  }, [user, isError, isSuccess, isLoading]);
   return (
     <div className="py-5" style={{ background: "#ffd333", minHeight: "100vh" }}>
       <br />
@@ -50,7 +33,7 @@ const Login = () => {
         <div className="error text-center">
           {message.message == "Rejected" ? "You are not an Admin" : ""}
         </div>
-        <form action="" onSubmit={formik.handleSubmit}>
+        <form action="" onSubmit={handleSignin}>
           <CustomInput
             type="text"
             label="Email Address"
@@ -75,11 +58,11 @@ const Login = () => {
           <div className="error mt-2">
             {formik.touched.password && formik.errors.password}
           </div>
-          <div className="mb-3 text-end">
+          {/* <div className="mb-3 text-end">
             <Link to="forgot-password" className="">
               Forgot Password?
             </Link>
-          </div>
+          </div> */}
           <button
             className="border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5"
             style={{ background: "#ffd333" }}
